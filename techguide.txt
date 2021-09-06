@@ -1,0 +1,137 @@
+https://stackoverflow.com/questions/28858351/php-ssl-certificate-error-unable-to-get-local-issuer-certificate
+https://www.formget.com/upload-multiple-images-using-php-and-jquery/
+http://5.9.10.113/62551387/access-the-properties-of-a-returned-data-using-nodejs
+https://stackoverflow.com/questions/13952686/how-to-make-html-input-tag-only-accept-numerical-values/13952761
+https://stackoverflow.com/questions/50254770/how-to-echo-inner-join-in-php
+https://stackoverflow.com/questions/31634097/inner-join-with-php
+https://stackoverflow.com/questions/59154516/using-an-alias-in-an-inner-join-query
+https://www.toptal.com/php/10-most-common-mistakes-php-programmers-make
+https://stackoverflow.com/questions/10724324/mysql-inner-join-alias
+https://stackoverflow.com/questions/50785763/mysql-php-how-to-join-same-table-multiple-times
+https://stackoverflow.com/questions/17457385/mysqli-query-in-while-loop
+https://stackoverflow.com/questions/30018213/recaptcha-2-0-enable-submit-button-on-callback-if-recaptcha-successful
+https://stackoverflow.com/questions/26894395/jquery-on-button-click-get-the-selected-option-value
+https://stackoverflow.com/questions/33641243/not-able-to-authenticate-custom-user-model-in-django
+https://stackoverflow.com/questions/32777184/html-input-for-positive-whole-numbers-only-type-number
+https://stackoverflow.com/questions/367863/find-records-from-one-table-which-dont-exist-in-another
+https://stackoverflow.com/questions/16987322/right-join-even-if-row-on-second-table-does-not-exist
+https://stackoverflow.com/questions/4847089/mysql-joins-and-count-from-another-table
+https://stackoverflow.com/questions/12932784/mysql-selecting-count-with-multiple-tables-and-conditions-for-each
+https://devcenter.heroku.com/articles/git-clone-heroku-app
+https://devcenter.heroku.com/articles/getting-started-with-python?singlepage=true
+https://stackoverflow.com/questions/24285260/bootstrap-css-height-of-list-group-item
+https://stackoverflow.com/questions/19404861/bootstrap-3-pull-right-for-col-lg-only
+https://stackoverflow.com/questions/18375929/validate-phone-number-using-javascript
+https://stackoverflow.com/questions/40498753/how-to-fix-refusing-to-merge-unrelated-histories-when-uploading-project-to-git
+https://stackoverflow.com/questions/45272492/git-refusing-to-merge-unrelated-histories-what-is-unrelated-histories
+https://medium.com/@colorfield/install-an-existing-laravel-project-c6e6bf28d5c6
+https://stackoverflow.com/questions/23970575/is-it-possible-to-get-phpmailer-to-send-the-mail-after-the-page-loads
+https://stackoverflow.com/questions/54983832/how-to-include-phpmailer-in-functions-php-properly-wordpress
+https://stackoverflow.com/questions/38939877/overriding-phpmailer-send-method
+https://netcorecloud.com/tutorials/send-an-email-via-gmail-smtp-server-using-php/
+https://stackoverflow.com/questions/30542095/mailer-error-smtp-connect-failed-in-php-mailer-https-github-com-phpmailer
+https://netcorecloud.com/tutorials/phpmailer-smtp-error-could-not-connect-to-smtp-host/
+https://github.com/PHPMailer/PHPMailer/blob/master/examples/contactform.phps
+https://makitweb.com/how-to-send-email-using-smtp-with-phpmailer-in-php/
+https://github.com/PHPMailer/PHPMailer/wiki/SMTP-Debugging
+https://stackoverflow.com/questions/52065112/optional-parameters-in-php-function-without-considering-order
+https://www.codehaven.co.uk/javascript/remove-spaces-on-keyup/
+https://jsfiddle.net/273ntk5s/2/
+https://codepen.io/uncommonjoe/pen/wxvXXZ
+https://stackoverflow.com/questions/18999501/bootstrap-3-keep-selected-tab-on-page-refresh
+https://www.codeply.com/go/bp/ZVSunDnXif
+https://stackoverflow.com/questions/26054119/input-group-addon-with-bootstrap-select
+https://stackoverflow.com/questions/38010634/how-to-clear-a-form-loaded-with-ajax
+https://stackoverflow.com/questions/34491182/make-bootstrap-tab-active-on-the-bases-of-url-link
+https://stackoverflow.com/questions/53864107/linkable-tabs-with-history-back-button-problem
+https://www.redotheweb.com/2012/05/17/enable-back-button-handling-with-twitter-bootstrap-tabs-plugin.html
+https://mdbootstrap.com/snippets/jquery/mdbootstrap/949116#css-tab-view
+http://jsfiddle.net/paydjo/0g906911/9/
+https://stackoverflow.com/questions/25261254/how-to-make-a-bootstrap-3-dropdown-menu-open-by-default-when-it-is-inside-a-coll
+https://stackoverflow.com/questions/18262972/box-shadow-on-bootstrap-3-container
+https://stackoverflow.com/questions/18153234/center-a-column-using-twitter-bootstrap-3
+https://stackoverflow.com/questions/20853066/how-to-center-form-in-bootstrap-3
+https://dba.stackexchange.com/questions/49913/specified-key-was-too-long-max-key-length-is-1000-bytes-in-mysql-5-6
+https://stackoverflow.com/questions/1814532/mysql-error-1071-specified-key-was-too-long-max-key-length-is-767-bytes
+https://stackoverflow.com/questions/8746207/1071-specified-key-was-too-long-max-key-length-is-1000-bytes
+https://stackoverflow.com/questions/9554799/php-push-array-into-array-key-issue/53508733
+https://www.codexworld.com/upload-multiple-images-store-in-database-php-mysql/
+https://stackoverflow.com/questions/38596971/unlink-multiple-images-using-a-loop
+https://www.scratchcode.io/how-to-resize-the-google-recaptcha/
+https://stackoverflow.com/questions/136782/convert-from-mysql-datetime-to-another-format-with-php
+https://stackoverflow.com/questions/4258557/limit-text-length-in-php-and-provide-read-more-link
+https://stackoverflow.com/questions/42388989/bootstrap-center-vertical-and-horizontal-alignment
+https://stackoverflow.com/questions/48424360/horizontal-center-a-select-in-a-div-with-bootstrap-4-beta
+https://stackoverflow.com/questions/41482388/how-to-show-jquery-datepicker-date-in-onload-in-to-a-div
+https://stackoverflow.com/questions/24040165/jquery-datepicker-close-datepicker-after-selected-date/24041047
+https://stackoverflow.com/questions/1501181/jquery-append-and-remove-element
+https://stackoverflow.com/questions/37984216/bootstrap-accordion-with-arrows
+https://cloud.google.com/identity-platform/docs/web/mfa?hl=th
+https://stackoverflow.com/questions/10811556/click-to-close-jquery-dropdown-menu-on-mobile-devices-while-retaining-other-beha
+http://jsfiddle.net/paulalexandru/tYGs5/
+https://stackoverflow.com/questions/27955452/i-want-regex-validate-mobile-and-phone-number-in-given-format
+https://www.section.io/engineering-education/password-strength-checker-javascript/
+https://github.com/orgs/zurichat/repositories
+
+09060402081
+
+
+
+
+
+Django
+https://gutsytechster.wordpress.com/2019/11/12/user-auth-operations-in-drf-login-logout-register-change-password/
+https://stackoverflow.com/questions/33641243/not-able-to-authenticate-custom-user-model-in-django
+https://testdriven.io/blog/django-custom-user-model/
+https://stackoverflow.com/questions/2786062/how-can-i-pull-an-existing-heroku-app-to-new-location-for-development
+https://stackoverflow.com/questions/54064780/how-to-revoke-refresh-token-on-password-reset
+https://stackoverflow.com/questions/33659994/django-rest-framework-create-user-and-user-profile
+https://stackoverflow.com/questions/55913920/django-rest-framework-displaying-the-users-profile
+https://thinkster.io/tutorials/django-json-api/authentication
+https://stackoverflow.com/questions/56925011/how-to-send-a-email-from-a-form-django
+https://stackoverflow.com/questions/53422595/django-send-email-on-form-submition
+https://softensy.com/how-to-create-payment-gateway-and-become-a-payment-service-provider/
+
+
+
+Laravel
+https://dev.to/tanzimibthesam/making-api-crud-create-read-update-delete-with-laravel-8-n-api-authentication-with-sanctum-19oh
+https://stackoverflow.com/questions/42244541/laravel-migration-error-syntax-error-or-access-violation-1071-specified-key-wa
+
+
+NODEJS
+https://blog.logrocket.com/node-js-express-js-mysql-rest-api-example/
+https://expressjs.com/en/guide/database-integration.html#mysql
+https://jasonwatmore.com/post/2020/08/18/nodejs-mysql-simple-api-for-authentication-registration-and-user-management
+https://www.bezkoder.com/node-js-jwt-authentication-mysql/
+https://tsh.io/blog/how-to-write-video-chat-app-using-webrtc-and-nodejs/
+https://www.npmjs.com/package/peerjs
+https://www.tutorialspoint.com/webrtc/webrtc_sending_messages.htm
+https://socket.io/get-started/chat/
+https://www.npmjs.com/package/wrtc
+
+
+
+
+
+
+Install the dependencies with Composer.
+composer install
+composer dumpautoload -o
+
+Generate the key for your environment file, it will define the value for ‘APP_KEY=’
+php artisan key:generate
+
+Finish by clearing the config and generate the cache.
+php artisan config:clear
+php artisan config:cache
+
+SteveKing Git
+https://github.com/JustSteveKing?tab=repositories
+
+
+# Audio call
+Connect thru socket
+pass room id and user id or token
+create room name in the database or peer connection
+when the end key pad is press, then cut the call or leave the room 

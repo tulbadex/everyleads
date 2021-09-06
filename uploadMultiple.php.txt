@@ -1,0 +1,32 @@
+foreach ($_FILES["fileToUpload"]["tmp_name"] as $key=>$tmp_name) {
+			// File upload path 
+            $fileName = basename($_FILES['fileToUpload']['name'][$key]); 
+			// $fileType = $_FILES['fileToUpload']['type'][$key];
+            $targetFilePath = $target_dir . $fileName; 
+
+			// Check whether file type is valid 
+            $fileType = pathinfo($targetFilePath, PATHINFO_EXTENSION); 
+            if(in_array($fileType, $allowTypes)){ 
+				if ($_FILES["fileToUpload"]["size"][$key] > 20000000) {
+					$statusmessage = "The file you tried to upload is large!";	
+				}
+                // Upload file to server 
+                if(move_uploaded_file($_FILES["fileToUpload"]["tmp_name"][$key], $targetFilePath)){ 
+                    // Image db insert sql 
+                    $query_doc = mysqli_query($connect, "SELECT `document_id` FROM `tbl_docs` order by id DESC LIMIT 1");
+					$val_doc = mysqli_fetch_assoc($query_doc);
+					$redoc = $val_doc['document_id'] + 1;
+
+					if($val_doc['document_id']==""){ $redoc = rand(10000,99999); }
+		
+					$sqln = "INSERT INTO `tbl_docs` (`document_id`, `filename`, `invoice_no`, `type`, `user_id`, `user_type`, `doc_purpose`, `date`, `time`) VALUES ('".$redoc."', '".$fileName."',  '".$hiddeninvoice_no."', '".$fileType."', '".$user_id."', '".$user_type."', '".$doc_purpose."', '".$date."', '".$time."')";
+					$rsN = mysqli_query($connect, $sqln) or die("Errorn : ".mysqli_error($connect));
+
+                }else{ 
+                    $statusmessage = "Error occur while uploading! Try again."; 
+                } 
+            }else{ 
+                $statusmessage = "The type of file you tried to upload is not accepted!";
+            } 
+
+		}
