@@ -6,16 +6,30 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class AuthController extends Controller
 {
     public function register(Request $request)
     {
-        $data = $request->validate([
+        $validator = FacadesValidator::make($request->all(),[
             'name' => 'required|string|max:50',
             'email' => 'required|string|email|max:150|unique:users',
             'password' => 'required|string|min:8'
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'Error validation' => $validator->errors()
+            ]);
+        }
+        /* $data = $request->validate([
+            'name' => 'required|string|max:50',
+            'email' => 'required|string|email|max:150|unique:users',
+            'password' => 'required|string|min:8'
+        ]); */
+
+        $data = $request->all();
 
         $user = User::create([
             'name' => $data['name'],
@@ -32,21 +46,44 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        $user = User::where('email', $request->email)->firstOrFail();
-        if (!$user || Hash::check($request->password, $user->password)) {
-            return response([
-                'message' => ['Credential invalid']
-            ], 404);
-        }
+        try {
+            $request->validate([
+                'email' => 'email|required',
+                'password' => 'required'
+            ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+            $credential = (['email', 'password']);
 
-        return response(
-            [
-                'user' => $user,
+            if (!Auth::attempt($credential)) {
+                return response()->json([
+                    'status_code' => 500,
+                    'message' => 'Unauthorized'
+                ]);
+            }
+
+            $user = User::where('email', $request->email)->firstOrFail();
+            if (! Hash::check($request->password, $user->password, [])) {
+                throw new \Exception('Error in Login');
+            }
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response([
+                    'message' => ['Credential invalid']
+                ], 404);
+            }
+
+            $token = $user->createToken('auth_token')->plainTextToken;
+
+            return response()->json([
+                'status_code' => 200,
                 'access_token' => $token,
                 'token_type' => 'Bearer'
-            ],
-        201);
+            ]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status_code' => 500,
+                'message' => 'Error in login',
+                'error' => $th
+            ]);
+        }
     }
 }
