@@ -134,4 +134,8 @@ https://github.com/JustSteveKing?tab=repositories
 Connect thru socket
 pass room id and user id or token
 create room name in the database or peer connection
-when the end key pad is press, then cut the call or leave the room 
+when the end key pad is press, then cut the call or leave the room
+
+#to ibstall php on wampp
+https://windows.php.net/download/
+https://www.myonlineedu.com/blog/view/16/how-to-update-to-php-8-in-wamp-server-localhost
