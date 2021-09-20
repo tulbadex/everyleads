@@ -19,9 +19,10 @@ class CreateLeadsTable extends Migration
             $table->unsignedInteger('assign_to')->nullable();
             $table->string('title', 150)->nullable();
             $table->text('subject')->nullable();
-            $table->date('start_date');
-            $table->date('end_date');
-            $table->string('status');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
+            $table->string('status')->nullable();
+            $table->string('feedback')->nullable();
             $table->timestamps();
 
             $table->index(['assign_to', 'creator']);
