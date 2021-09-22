@@ -66,7 +66,7 @@ class AuthController extends Controller
             ], 201);
         } catch (\Throwable $th) {
             return response()->json([
-                'message' => 'Error in login',
+                'message' => 'Error occur while authenticating',
                 'error' => $th
             ], 500);
         }
@@ -74,6 +74,7 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        // auth()->user()->currentAccessToken()->delete();
         auth()->user()->tokens()->delete();
         return response()->json([
                 'message' => 'Logged out Successful',
