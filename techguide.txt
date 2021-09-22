@@ -134,6 +134,7 @@ https://github.com/JustSteveKing?tab=repositories
 Connect thru socket
 pass room id and user id or token
 create room name in the database or peer connection
+<<<<<<< HEAD
 when the end key pad is press, then cut the call or leave the room 
 
 # to use laravel with docker
@@ -145,3 +146,10 @@ docs.microsoft.com/en-us/windows/wsl/install-win10
 # also set docker to use WSL backend
 docs.docker.com/docker-for-windows/wsl
 # using sail, it will auto install redis, mysql and other services
+=======
+when the end key pad is press, then cut the call or leave the room
+
+#to ibstall php on wampp
+https://windows.php.net/download/
+https://www.myonlineedu.com/blog/view/16/how-to-update-to-php-8-in-wamp-server-localhost
+>>>>>>> f29ef23a560b483449a929e50e70afa1efab5ae4
