@@ -135,3 +135,13 @@ Connect thru socket
 pass room id and user id or token
 create room name in the database or peer connection
 when the end key pad is press, then cut the call or leave the room 
+
+# to use laravel with docker
+download docker from docker.com/get-started
+select docker desktop and select your OS 
+# for windows user 
+you need to enable windows subsystem for Linux and follow the steps on
+docs.microsoft.com/en-us/windows/wsl/install-win10
+# also set docker to use WSL backend
+docs.docker.com/docker-for-windows/wsl
+# using sail, it will auto install redis, mysql and other services

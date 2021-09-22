@@ -21,7 +21,7 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'Error validation' => $validator->errors()
-            ]);
+            ], 404);
         }
         /* $data = $request->validate([
             'name' => 'required|string|max:50',
@@ -29,19 +29,17 @@ class AuthController extends Controller
             'password' => 'required|string|min:8'
         ]); */
 
-        $data = $request->all();
-
         $user = User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password'])
+            'name' => $validator['name'],
+            'email' => $validator['email'],
+            'password' => Hash::make($validator['password'])
         ]);
 
         $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
             'access_token' => $token,
             'token_type' => 'Bearer'
-        ]);
+        ]), 201;
     }
 
     public function login(Request $request)
@@ -54,7 +52,7 @@ class AuthController extends Controller
 
             $credential = (['email', 'password']);
 
-            if (!Auth::attempt($credential)) {
+            if (!Auth::attempt($request->only($credential))) {
                 return response()->json([
                     'status_code' => 500,
                     'message' => 'Unauthorized'
@@ -62,9 +60,9 @@ class AuthController extends Controller
             }
 
             $user = User::where('email', $request->email)->firstOrFail();
-            if (! Hash::check($request->password, $user->password, [])) {
+            /* if (! Hash::check($request->password, $user->password, [])) {
                 throw new \Exception('Error in Login');
-            }
+            } */
             if (!$user || !Hash::check($request->password, $user->password)) {
                 return response([
                     'message' => ['Credential invalid']
@@ -74,16 +72,25 @@ class AuthController extends Controller
             $token = $user->createToken('auth_token')->plainTextToken;
 
             return response()->json([
-                'status_code' => 200,
+                'status_code' => 201,
                 'access_token' => $token,
                 'token_type' => 'Bearer'
-            ]);
+            ], 201);
         } catch (\Throwable $th) {
             return response()->json([
                 'status_code' => 500,
-                'message' => 'Error in login',
+                'message' => 'Error occur while authenticating',
                 'error' => $th
-            ]);
+            ], 500);
         }
+    }
+
+    public function logout()
+    {
+        // auth()->user()->tokens()->delete();
+        auth()->user()->currentAccessToken()->delete();
+        return [
+            'message' => 'Logged out'
+        ];
     }
 }
