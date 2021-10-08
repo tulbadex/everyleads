@@ -18,7 +18,13 @@ class CreateLeadsTable extends Migration
             $table->unsignedInteger('creator')->nullable();
             $table->unsignedInteger('assign_to')->nullable();
             $table->string('title', 150)->nullable();
-            $table->text('subject')->nullable();
+            $table->text('description')->nullable();
+            $table->text('value')->nullable();
+            $table->string('source', 150)->nullable();
+            $table->string('contact_person', 150)->nullable();
+            $table->string('contact_email', 150)->nullable();
+            $table->string('contact_phone', 150)->nullable();
+            $table->string('contact_organization', 150)->nullable();
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
             $table->string('status')->nullable();
