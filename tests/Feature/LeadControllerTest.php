@@ -52,4 +52,62 @@ class LeadControllerTest extends TestCase
         $response->assertOk()
             ->assertJsonCount(3, 'data');
     }
+
+    /** @test */
+    public function itReturnAllLeadsAssign()
+    {
+        $user = User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        Lead::factory()->create([
+            'creator' => $user->id,
+            'assign_to' => $user1->id,
+        ]);
+
+        Lead::factory()->create([
+            'creator' => $user2->id,
+            'assign_to' => $user1->id,
+        ]);
+
+        Lead::factory(6)->create();
+
+        $response = $this->get('/api/leads?assign='.$user1->id);
+
+        // dd($response);
+
+        $response->assertOk()
+            ->assertJsonStructure(['data', 'meta', 'links'])
+            ->assertJsonCount(2, 'data')
+            ->assertJsonPath('data.0.assign.id', $user1->id);
+    }
+
+     /** @test */
+     public function itReturnAllLeadsByStatus()
+     {
+         $user = User::factory()->create();
+         $user1 = User::factory()->create();
+         $user2 = User::factory()->create();
+         Lead::factory(5)->create([
+             'creator' => $user->id,
+             'status' => Lead::STATUS_FOLLOW_UP
+         ]);
+
+         Lead::factory(3)->create([
+             'creator' => $user->id,
+             'status' => Lead::STATUS_LOST
+         ]);
+
+         Lead::factory(6)->create();
+
+         $response = $this->get('/api/leads?creator='.$user->id."&status=".Lead::STATUS_LOST);
+
+        //  dd($response);
+
+         $response->assertOk()
+             ->assertJsonStructure(['data', 'meta', 'links'])
+             ->assertJsonCount(3, 'data')
+             ->assertJsonPath('data.0.creator.id', $user->id);
+     }
+
+     
 }

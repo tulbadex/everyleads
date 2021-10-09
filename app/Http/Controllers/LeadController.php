@@ -25,8 +25,19 @@ class LeadController extends Controller
             ->when(request('creator') && auth()->user() && request('creator') == auth()->id(), 
                 fn($builder) => $builder
             )
+            ->when(request('assign') && auth()->user() && request('assign') == auth()->id(), 
+                fn($builder) => $builder
+            )
+            ->when(request('status') && auth()->user() && request('status') == auth()->id(), 
+                fn($builder) => $builder->whereStatus(request('status'))
+            )
+            ->when(
+                request('status') && (request('creator') || request('assign')),
+                fn ($builder) => $builder->status(request('status'), request('creator'), request('assign')),
+                fn ($builder) => $builder->orderBy('id', 'desc')
+            )
             ->when(request('creator'), fn($builder) => $builder->whereCreator(request('creator')))
-            ->when(request('assign'), fn($builder) => $builder->whereAssign(request('assign')))
+            ->when(request('assign'), fn($builder) => $builder->whereAssignTo(request('assign')))
             ->with(['creator', 'assign'])
             ->withCount(['creator', 'assign'])
             ->paginate(20);

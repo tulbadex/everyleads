@@ -32,4 +32,15 @@ class Lead extends Model
     {
         return $this->hasOne(User::class, 'id', 'assign_to');
     } */
+
+    public function scopeStatus($query, $status, $creator, $assign)
+    {
+        $query->where(function($query) use($status, $creator, $assign){
+            $query->whereStatus($status)
+             ->Where(function ($query) use($status, $creator, $assign){
+                 $query->where('creator', $creator)
+                    ->orWhere('assign_to', $assign);
+             });
+        });
+    }
 }
