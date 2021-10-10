@@ -15,13 +15,13 @@ class LeadValidator
             'description' => [Rule::when($lead->exists, 'sometimes'), 'required', 'string'],
             'value' => [Rule::when($lead->exists, 'sometimes'), 'required', 'integer'],
             'source' => [Rule::when($lead->exists, 'sometimes'), 'required', 'string'],
+            // 'assign_to' => [Rule::when($lead->exists, 'sometimes'), 'integer'],
             'contact_person' => [Rule::when($lead->exists, 'sometimes'), 'required', 'string'],
             'contact_email' => [Rule::when($lead->exists, 'sometimes'), 'required', 'string'],
             'contact_phone' => [Rule::when($lead->exists, 'sometimes'), 'required', 'string'],
             'contact_organization' => [Rule::when($lead->exists, 'sometimes'), 'required', 'string'],
-            'start_date' => [Rule::when($lead->exists, 'sometimes'), 'required', 'date', 'before:end_date'],
-            'end_date' => [Rule::when($lead->exists, 'sometimes'), 'required', 'date', 'after:start_date'],
-
+            'start_date' => [Rule::when($lead->exists, 'sometimes'), 'required', 'date:Y-m-d', 'before:end_date'],
+            'end_date' => [Rule::when($lead->exists, 'sometimes'), 'required', 'date:Y-m-d', 'after:start_date'],
         ])->validate();
     }
 }

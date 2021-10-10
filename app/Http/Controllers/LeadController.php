@@ -11,6 +11,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
 use Illuminate\Validation\{Rule, ValidationException};
+use Illuminate\Support\Facades\{DB, Notification, Storage};
 
 class LeadController extends Controller
 {
@@ -22,13 +23,13 @@ class LeadController extends Controller
     public function index() : JsonResource
     {
         $leads = Lead::query()
-            ->when(request('creator') && auth()->user() && request('creator') == auth()->id(), 
+            ->when(request('creator') && auth()->user() && request('creator') == auth()->id(),
                 fn($builder) => $builder
             )
-            ->when(request('assign') && auth()->user() && request('assign') == auth()->id(), 
+            ->when(request('assign') && auth()->user() && request('assign') == auth()->id(),
                 fn($builder) => $builder
             )
-            ->when(request('status') && auth()->user() && request('status') == auth()->id(), 
+            ->when(request('status') && auth()->user() && request('status') == auth()->id(),
                 fn($builder) => $builder->whereStatus(request('status'))
             )
             ->when(
@@ -52,7 +53,7 @@ class LeadController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create() : JsonResource
     {
         abort_unless(auth()->user()->tokenCan('leads.create'),
             Response::HTTP_FORBIDDEN
@@ -64,18 +65,14 @@ class LeadController extends Controller
         );
 
         $attributes['creator'] = auth()->id();
+        $attributes['assign_to'] = request('assign_to');
+        $attributes['status'] = Lead::STATUS_NEGOTIATION;
 
-        $lead = DB::transaction(function () use($lead, $attributes) {
+        $lead = Lead::create(
+            $attributes
+        );
 
-            $lead->fill(
-                Arr::except($attributes)
-            )->save();
-
-
-            return $lead;
-        });
-
-        return OfficeResource::make(
+        return LeadResource::make(
             $lead->load(['creator', 'assign'])
         );
     }
@@ -97,9 +94,10 @@ class LeadController extends Controller
      * @param  \App\Models\Lead  $lead
      * @return \Illuminate\Http\Response
      */
-    public function show(Lead $lead)
+    public function show(Lead $lead) : JsonResource
     {
-        //
+        $lead->load(['creator', 'assign']);
+        return LeadResource::make($lead);
     }
 
     /**
@@ -120,9 +118,21 @@ class LeadController extends Controller
      * @param  \App\Models\Lead  $lead
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Lead $lead)
+    public function update(Lead $lead) : JsonResource
     {
-        //
+        abort_unless(auth()->user()->tokenCan('leads.update'),
+            Response::HTTP_FORBIDDEN
+        );
+
+        $this->authorize('update', $lead);
+
+        $attributes = (new LeadValidator())->validate($lead, request()->all());
+
+        $lead->update($attributes);
+
+        return LeadResource::make(
+            $lead->load(['creator', 'assign'])
+        );
     }
 
     /**

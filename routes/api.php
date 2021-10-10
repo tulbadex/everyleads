@@ -29,3 +29,6 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 // Leads fetch
 Route::get('/leads', [LeadController::class, 'index']);
 Route::post('/leads', [LeadController::class, 'create'])->middleware('auth:sanctum');
+
+Route::put('/leads/{lead}', [LeadController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('/leads/{office}', [LeadController::class, 'destroy'])->middleware('auth:sanctum');
