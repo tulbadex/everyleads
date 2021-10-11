@@ -207,7 +207,6 @@ class LeadControllerTest extends TestCase
            'creator' => $user->id
        ]);
 
-        // $this->actingAs($user);
         Sanctum::actingAs($user, ['leads.update']);
 
        $response = $this->putJson('/api/leads/'.$lead->id, [
@@ -219,7 +218,67 @@ class LeadControllerTest extends TestCase
        $response->assertOk()
            ->assertJsonPath('data.creator.id', $user->id)
            ->assertJsonPath('data.title', 'Updated leads title');
+        $this->assertAuthenticated();
 
+    }
+
+    /** @test */
+    public function itCannotUpdateAnLeadThatIsForAnotherUser()
+    {
+       $user = User::factory()->create();
+       $another_user = User::factory()->create();
+       $lead = Lead::factory()->create([
+           'creator' => $another_user->id
+       ]);
+
+       $this->actingAs($user);
+
+       $response = $this->putJson('/api/leads/'.$lead->id, [
+           'title' => 'Can not update title for other user'
+       ]);
+
+       // dd($response->json());
+       // dd($response->status());
+
+       $response->assertStatus(403);
+       $response->assertForbidden();
+
+    }
+
+    /** @test  */
+    public function itCanDeleteLeads()
+    {
+
+       $user = User::factory()->create();
+       $lead = Lead::factory()->create([
+           'creator' => $user->id
+       ]);
+
+       Sanctum::actingAs($user, ['leads.delete']);
+
+       $response = $this->delete('/api/leads/'.$lead->id);
+       $response->assertOk();
+
+       $this->assertDeleted($lead);
+    }
+
+    /** @test  */
+    public function itCannotDeleteLeadThatBelongsToAnotherUser()
+    {
+
+       $user = User::factory()->create();
+       $user1 = User::factory()->create();
+       $lead = Lead::factory()->create([
+           'creator' => $user1->id
+       ]);
+
+       Sanctum::actingAs($user, ['leads.delete']);
+
+       $response = $this->delete('/api/leads/'.$lead->id);
+
+       $response->assertStatus(403);
+       $response->assertForbidden();
+       $this->assertModelExists($lead);
     }
 
 }

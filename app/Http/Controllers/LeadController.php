@@ -143,6 +143,12 @@ class LeadController extends Controller
      */
     public function destroy(Lead $lead)
     {
-        //
+        abort_unless(auth()->user()->tokenCan('leads.delete'),
+            Response::HTTP_FORBIDDEN
+        );
+
+        $this->authorize('delete', $lead);
+
+        $lead->delete();
     }
 }
