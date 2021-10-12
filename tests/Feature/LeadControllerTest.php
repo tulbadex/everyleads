@@ -223,6 +223,36 @@ class LeadControllerTest extends TestCase
     }
 
     /** @test */
+    public function itAllowAdminToUpdatesALead()
+    {
+        $admin = User::factory()->create([
+            'is_admin' => true
+        ]);
+        
+       $user = User::factory()->create([
+           'name' => 'Halilu Tahir'
+       ]);
+
+       $lead = Lead::factory()->create([
+           'creator' => $user->id
+       ]);
+
+        Sanctum::actingAs($admin, ['leads.update']);
+
+       $response = $this->putJson('/api/leads/'.$lead->id, [
+           'title' => 'Updated leads title'
+       ]);
+
+       // dd($response->json());
+
+       $response->assertOk()
+           ->assertJsonPath('data.creator.id', $user->id)
+           ->assertJsonPath('data.title', 'Updated leads title');
+        $this->assertAuthenticated();
+
+    }
+
+    /** @test */
     public function itCannotUpdateAnLeadThatIsForAnotherUser()
     {
        $user = User::factory()->create();
@@ -279,6 +309,28 @@ class LeadControllerTest extends TestCase
        $response->assertStatus(403);
        $response->assertForbidden();
        $this->assertModelExists($lead);
+    }
+
+    /** @test  */
+    public function itAllowAdminToDeleteLeads()
+    {
+
+       $admin = User::factory()->create([
+           'is_admin' => true
+       ]);
+
+       $user = User::factory()->create();
+       $lead = Lead::factory()->create([
+           'creator' => $user->id
+       ]);
+
+       Sanctum::actingAs($admin, ['leads.delete']);
+
+       $response = $this->delete('/api/leads/'.$lead->id);
+
+       $response->assertOk();
+
+       $this->assertDeleted($lead);
     }
 
 }

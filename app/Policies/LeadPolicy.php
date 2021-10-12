@@ -10,6 +10,12 @@ class LeadPolicy
 {
     use HandlesAuthorization;
 
+    public function before(User $user)
+    {
+        // return $user->is_admin?true:false;
+        return $user->is_admin === true;
+    }
+
     /**
      * Determine whether the user can view any models.
      *
@@ -18,7 +24,7 @@ class LeadPolicy
      */
     public function viewAny(User $user)
     {
-        //
+        // return $user->is_admin?true:false;
     }
 
     /**
