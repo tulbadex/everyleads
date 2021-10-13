@@ -18,20 +18,13 @@ class Lead extends Model
     const STATUS_WON = 'won';
     const STATUS_LOST = 'lost';
 
-    public function creator(): BelongsTo
-    {
+    public function creator(): BelongsTo {
         return $this->belongsTo(User::class, 'creator');
     }
 
-    public function assign(): BelongsTo
-    {
+    public function assign(): BelongsTo {
         return $this->belongsTo(User::class, 'assign_to');
     }
-
-    /* public function assign(): HasOne
-    {
-        return $this->hasOne(User::class, 'id', 'assign_to');
-    } */
 
     public function scopeStatus($query, $status, $creator, $assign)
     {

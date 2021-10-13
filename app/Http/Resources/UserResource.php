@@ -16,13 +16,8 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         return [
-            
-            /* 'id' => $this->id,
-            'name' => $this->name,
-            'email' => $this->email, */
-
             $this->merge(Arr::except(parent::toArray($request), [
-                'created_at', 'updated_at', 'email_verified_at', 'email'
+                'created_at', 'updated_at', 'email_verified_at', 'email', 'is_admin'
             ]))
         ];
     }

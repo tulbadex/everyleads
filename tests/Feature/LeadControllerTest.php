@@ -26,6 +26,7 @@ class LeadControllerTest extends TestCase
         $response = $this->get('/api/leads');
 
         // dd($response->json());
+        $response->dump();
         $response->assertOk()
             ->assertJsonStructure(['data', 'meta', 'links'])
             ->assertJsonCount(20, 'data')
