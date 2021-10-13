@@ -214,6 +214,7 @@ class LeadControllerTest extends TestCase
        ]);
 
        // dd($response->json());
+    //    $response->dump();
 
        $response->assertOk()
            ->assertJsonPath('data.creator.id', $user->id)

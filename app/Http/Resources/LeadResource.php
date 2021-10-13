@@ -5,6 +5,8 @@ namespace App\Http\Resources;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Arr;
 
+use App\Http\Resources\UserResource;
+
 class LeadResource extends JsonResource
 {
     /**
@@ -17,6 +19,8 @@ class LeadResource extends JsonResource
     {
         // return parent::toArray($request);
         return [
+            /* 'creator' => UserResource::make($this->whenLoaded('creator')),
+            'assign' => UserResource::make($this->whenLoaded('assign')), */
             /* 'creator' => UserResource::make($this->creator),
             'assign' => UserResource::make($this->assign), */
 

@@ -10,10 +10,11 @@ class LeadPolicy
 {
     use HandlesAuthorization;
 
-    public function before(User $user)
+    public function before(User $user, $ability)
     {
-        // return $user->is_admin?true:false;
-        return $user->is_admin === true;
+        if ($user->is_admin) {
+            return true;
+        }
     }
 
     /**
@@ -24,7 +25,7 @@ class LeadPolicy
      */
     public function viewAny(User $user)
     {
-        // return $user->is_admin?true:false;
+        // 
     }
 
     /**
