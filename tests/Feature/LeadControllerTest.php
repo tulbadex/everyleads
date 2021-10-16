@@ -2,17 +2,16 @@
 
 namespace Tests\Feature;
 
-use App\Models\{Lead, User};
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\Lead;
+use App\Models\User;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 class LeadControllerTest extends TestCase
 {
-    /**
+    /*
      * A basic feature test example.
      *
      * @return void
@@ -23,10 +22,10 @@ class LeadControllerTest extends TestCase
     public function itListAllLeadsWithPagination()
     {
         Lead::factory(30)->create();
-        $response = $this->get('/api/leads');
+        $response = $this->get('/api/v1/leads');
 
         // dd($response->json());
-        $response->dump();
+        // $response->dump();
         $response->assertOk()
             ->assertJsonStructure(['data', 'meta', 'links'])
             ->assertJsonCount(20, 'data')
@@ -39,17 +38,17 @@ class LeadControllerTest extends TestCase
         $user = User::factory()->create();
         $user1 = User::factory()->create();
         Lead::factory(3)->create([
-            'creator' => $user->id
+            'creator' => $user->id,
         ]);
 
         Lead::factory(4)->create([
-            'creator' => $user1->id
+            'creator' => $user1->id,
         ]);
 
         // $this->actingAs($user);
         // Sanctum::actingAs($user, []);
 
-        $response = $this->get('/api/leads?creator='.$user->id);
+        $response = $this->get('/api/v1/leads?creator='.$user->id);
 
         $response->assertOk()
             ->assertJsonCount(3, 'data');
@@ -73,7 +72,7 @@ class LeadControllerTest extends TestCase
 
         Lead::factory(6)->create();
 
-        $response = $this->get('/api/leads?assign='.$user1->id);
+        $response = $this->get('/api/v1/leads?assign='.$user1->id);
 
         // dd($response);
 
@@ -83,59 +82,59 @@ class LeadControllerTest extends TestCase
             ->assertJsonPath('data.0.assign.id', $user1->id);
     }
 
-     /** @test */
-     public function itReturnAllLeadsByStatus()
-     {
-         $user = User::factory()->create();
-         $user1 = User::factory()->create();
-         $user2 = User::factory()->create();
-         Lead::factory(5)->create([
+    /** @test */
+    public function itReturnAllLeadsByStatus()
+    {
+        $user = User::factory()->create();
+        $user1 = User::factory()->create();
+        $user2 = User::factory()->create();
+        Lead::factory(5)->create([
              'creator' => $user->id,
-             'status' => Lead::STATUS_FOLLOW_UP
+             'status' => Lead::STATUS_FOLLOW_UP,
          ]);
 
-         Lead::factory(3)->create([
+        Lead::factory(3)->create([
              'creator' => $user->id,
-             'status' => Lead::STATUS_LOST
+             'status' => Lead::STATUS_LOST,
          ]);
 
-         Lead::factory(6)->create();
+        Lead::factory(6)->create();
 
-         $response = $this->get('/api/leads?creator='.$user->id."&status=".Lead::STATUS_LOST);
+        $response = $this->get('/api/v1/leads?creator='.$user->id.'&status='.Lead::STATUS_LOST);
 
         //  dd($response);
 
-         $response->assertOk()
+        $response->assertOk()
              ->assertJsonStructure(['data', 'meta', 'links'])
              ->assertJsonCount(3, 'data')
              ->assertJsonPath('data.0.creator.id', $user->id);
-     }
+    }
 
-     /** @test */
-     public function itOrderLeadsByIdDesc()
-     {
+    /** @test */
+    public function itOrderLeadsByIdDesc()
+    {
         User::factory()->create();
 
         Lead::factory()->create([
-            'title' => "First Title",
-            'status' => Lead::STATUS_FOLLOW_UP
+            'title' => 'First Title',
+            'status' => Lead::STATUS_FOLLOW_UP,
         ]);
 
         Lead::factory()->create([
-            'title' => "Second Title",
-            'status' => Lead::STATUS_LOST
+            'title' => 'Second Title',
+            'status' => Lead::STATUS_LOST,
         ]);
 
-        $response = $this->get('/api/leads');
+        $response = $this->get('/api/v1/leads');
         // dd($response);
 
         $this->assertEquals('Second Title', $response->json('data')[0]['title']);
         $this->assertEquals('First Title', $response->json('data')[1]['title']);
-     }
+    }
 
-     /** @test */
-     public function itCreateALead()
-     {
+    /** @test */
+    public function itCreateALead()
+    {
         $user = User::factory()->create();
         $user1 = User::factory()->create();
 
@@ -144,15 +143,15 @@ class LeadControllerTest extends TestCase
 
         Sanctum::actingAs($user, ['leads.create']);
 
-        $response = $this->postJson('/api/leads', [
+        $response = $this->postJson('/api/v1/leads', [
             'title' => 'This is title',
             'description' => 'This is description',
             'value' => 99,
-            'source' => "Facebook",
-            'contact_person' => "Raheem",
-            'contact_email' => "raheem@gmail.com",
-            'contact_phone' => "09034234568",
-            'contact_organization' => "Wahik and co",
+            'source' => 'Facebook',
+            'contact_person' => 'Raheem',
+            'contact_email' => 'raheem@gmail.com',
+            'contact_phone' => '09034234568',
+            'contact_organization' => 'Wahik and co',
             'start_date' => now()->addDays(1)->toDateString(),
             'end_date' => $toDate,
             // 'status' => Lead::STATUS_FOLLOW_UP,
@@ -164,14 +163,14 @@ class LeadControllerTest extends TestCase
 
         $response->assertCreated()
             ->assertJsonPath('data.status', Lead::STATUS_NEGOTIATION)
-            ->assertJsonPath('data.source', "Facebook")
+            ->assertJsonPath('data.source', 'Facebook')
             ->assertJsonPath('data.creator.id', $user->id)
             ->assertJsonPath('data.assign.id', $user1->id);
 
         $this->assertDatabaseHas('leads', [
-            'id' => $response->json('data.id')
+            'id' => $response->json('data.id'),
         ]);
-     }
+    }
 
     /** @test */
     public function itDoesntAllowLeadCreateIfScopeNotProvided()
@@ -179,10 +178,9 @@ class LeadControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user, []);
 
-        $response = $this->postJson('/api/leads');
+        $response = $this->postJson('/api/v1/leads');
 
         $response->assertStatus(403);
-
     }
 
     /** @test */
@@ -191,148 +189,141 @@ class LeadControllerTest extends TestCase
         $user = User::factory()->create();
         Sanctum::actingAs($user, ['leads.create']);
 
-        $response = $this->postJson('/api/leads');
+        $response = $this->postJson('/api/v1/leads');
 
         $this->assertNotEquals(Response::HTTP_FORBIDDEN, $response->status());
-
     }
 
     /** @test */
     public function itUpdatesALead()
     {
-       $user = User::factory()->create([
-           'name' => 'Halilu Tahir'
+        $user = User::factory()->create([
+           'name' => 'Halilu Tahir',
        ]);
 
-       $lead = Lead::factory()->create([
-           'creator' => $user->id
+        $lead = Lead::factory()->create([
+           'creator' => $user->id,
        ]);
 
         Sanctum::actingAs($user, ['leads.update']);
 
-       $response = $this->putJson('/api/leads/'.$lead->id, [
-           'title' => 'Updated leads title'
+        $response = $this->putJson('/api/v1/leads/'.$lead->id, [
+           'title' => 'Updated leads title',
        ]);
 
-       // dd($response->json());
-    //    $response->dump();
+        // dd($response->json());
+        //    $response->dump();
 
-       $response->assertOk()
+        $response->assertOk()
            ->assertJsonPath('data.creator.id', $user->id)
            ->assertJsonPath('data.title', 'Updated leads title');
         $this->assertAuthenticated();
-
     }
 
     /** @test */
     public function itAllowAdminToUpdatesALead()
     {
         $admin = User::factory()->create([
-            'is_admin' => true
+            'is_admin' => true,
         ]);
-        
-       $user = User::factory()->create([
-           'name' => 'Halilu Tahir'
+
+        $user = User::factory()->create([
+           'name' => 'Halilu Tahir',
        ]);
 
-       $lead = Lead::factory()->create([
-           'creator' => $user->id
+        $lead = Lead::factory()->create([
+           'creator' => $user->id,
        ]);
 
         Sanctum::actingAs($admin, ['leads.update']);
 
-       $response = $this->putJson('/api/leads/'.$lead->id, [
-           'title' => 'Updated leads title'
+        $response = $this->putJson('/api/v1/leads/'.$lead->id, [
+           'title' => 'Updated leads title',
        ]);
 
-       // dd($response->json());
+        // dd($response->json());
 
-       $response->assertOk()
+        $response->assertOk()
            ->assertJsonPath('data.creator.id', $user->id)
            ->assertJsonPath('data.title', 'Updated leads title');
         $this->assertAuthenticated();
-
     }
 
     /** @test */
     public function itCannotUpdateAnLeadThatIsForAnotherUser()
     {
-       $user = User::factory()->create();
-       $another_user = User::factory()->create();
-       $lead = Lead::factory()->create([
-           'creator' => $another_user->id
+        $user = User::factory()->create();
+        $another_user = User::factory()->create();
+        $lead = Lead::factory()->create([
+           'creator' => $another_user->id,
        ]);
 
-       $this->actingAs($user);
+        // $this->actingAs($user);
+        Sanctum::actingAs($user, ['leads.update']);
 
-       $response = $this->putJson('/api/leads/'.$lead->id, [
-           'title' => 'Can not update title for other user'
+        $response = $this->putJson('/api/v1/leads/'.$lead->id, [
+           'title' => 'Can not update title for other user',
        ]);
 
-       // dd($response->json());
-       // dd($response->status());
+        // dd($response->json());
+        // dd($response->status());
 
        $response->assertStatus(403);
        $response->assertForbidden();
-
     }
 
     /** @test  */
     public function itCanDeleteLeads()
     {
-
-       $user = User::factory()->create();
-       $lead = Lead::factory()->create([
-           'creator' => $user->id
+        $user = User::factory()->create();
+        $lead = Lead::factory()->create([
+           'creator' => $user->id,
        ]);
 
-       Sanctum::actingAs($user, ['leads.delete']);
+        Sanctum::actingAs($user, ['leads.delete']);
 
-       $response = $this->delete('/api/leads/'.$lead->id);
-       $response->assertOk();
+        $response = $this->delete('/api/v1/leads/'.$lead->id);
+        $response->assertOk();
 
-       $this->assertDeleted($lead);
+        $this->assertDeleted($lead);
     }
 
     /** @test  */
     public function itCannotDeleteLeadThatBelongsToAnotherUser()
     {
-
-       $user = User::factory()->create();
-       $user1 = User::factory()->create();
-       $lead = Lead::factory()->create([
-           'creator' => $user1->id
+        $user = User::factory()->create();
+        $user1 = User::factory()->create();
+        $lead = Lead::factory()->create([
+           'creator' => $user1->id,
        ]);
 
-       Sanctum::actingAs($user, ['leads.delete']);
+        Sanctum::actingAs($user, ['leads.delete']);
 
-       $response = $this->delete('/api/leads/'.$lead->id);
+        $response = $this->delete('/api/v1/leads/'.$lead->id);
 
-       $response->assertStatus(403);
-       $response->assertForbidden();
-       $this->assertModelExists($lead);
+        $response->assertStatus(403);
+        $response->assertForbidden();
+        $this->assertModelExists($lead);
     }
 
     /** @test  */
     public function itAllowAdminToDeleteLeads()
     {
-
-       $admin = User::factory()->create([
-           'is_admin' => true
+        $admin = User::factory()->create([
+           'is_admin' => true,
        ]);
 
-       $user = User::factory()->create();
-       $lead = Lead::factory()->create([
-           'creator' => $user->id
+        $user = User::factory()->create();
+        $lead = Lead::factory()->create([
+           'creator' => $user->id,
        ]);
 
-       Sanctum::actingAs($admin, ['leads.delete']);
+        Sanctum::actingAs($admin, ['leads.delete']);
 
-       $response = $this->delete('/api/leads/'.$lead->id);
+        $response = $this->delete('/api/v1/leads/'.$lead->id);
 
-       $response->assertOk();
+        $response->assertOk();
 
-       $this->assertDeleted($lead);
+        $this->assertDeleted($lead);
     }
-
 }

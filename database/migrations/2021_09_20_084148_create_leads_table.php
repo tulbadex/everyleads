@@ -32,8 +32,8 @@ class CreateLeadsTable extends Migration
             $table->timestamps();
 
             $table->index(['assign_to', 'creator']);
-            $table->foreign('assign_to')->references('id')->on('users');
-            $table->foreign('creator')->references('id')->on('users');
+            $table->foreign('assign_to')->references('id')->on('users')->onDelete("set null");
+            $table->foreign('creator')->references('id')->on('users')->onDelete("set null");
         });
     }
 

@@ -1,12 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
 use App\Models\Lead;
 use App\Models\Validators\LeadValidator;
-use App\Http\Resources\LeadResource;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Resources\V1\LeadResource;
+use Illuminate\Http\{Request, Response};
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Arr;
@@ -29,7 +28,7 @@ class LeadController extends Controller
             ->when(request('assign') && auth()->user() && request('assign') == auth()->id(),
                 fn($builder) => $builder
             )
-            ->when(request('status') && auth()->user() && request('status') == auth()->id(),
+            ->when(request('status') && auth()->user(),
                 fn($builder) => $builder->whereStatus(request('status'))
             )
             ->when(

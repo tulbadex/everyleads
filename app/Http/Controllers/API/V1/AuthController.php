@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API\V1;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -14,7 +14,8 @@ class AuthController extends Controller
     {
         $validator = FacadesValidator::make($request->all(),[
             'name' => 'required|string|max:50',
-            'email' => 'required|string|email|max:150|unique:users,email',
+            'username' => 'required|string|max:50',
+            'email' => 'required|string|email:rfc,dns|max:150|unique:users,email',
             'password' => 'required|string|min:8'
         ]);
 
@@ -72,10 +73,12 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(Request $request)
+    public function logout(Request $request, User $user)
     {
         // auth()->user()->currentAccessToken()->delete();
-        auth()->user()->tokens()->delete();
+        // auth()->user()->tokens()->delete();
+        // $user->tokens()->delete();
+        $request->user()->currentAccessToken()->delete();
         return response()->json([
                 'message' => 'Logged out Successful',
             ], 201);

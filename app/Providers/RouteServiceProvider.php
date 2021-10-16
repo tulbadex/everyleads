@@ -18,6 +18,7 @@ class RouteServiceProvider extends ServiceProvider
      * @var string
      */
     public const HOME = '/home';
+    protected $apiNamespace = 'App\Http\Controllers\Api';
 
     /**
      * The controller namespace for the application.
@@ -46,8 +47,42 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->namespace($this->namespace)
                 ->group(base_path('routes/web.php'));
+
+            Route::prefix('api/v1')
+                ->middleware('api')
+                ->namespace("{$this->apiNamespace}\V1")
+                ->group(base_path('routes/apiv1.php'));
         });
     }
+
+    /* protected function mapApiRoutes()
+    {
+        Route::prefix('api/v1')
+            ->middleware('api')
+            ->namespace("{$this->apiNamespace}\V1")
+            ->group(base_path('routes/apiv1.php'));
+
+        Route::prefix('api/v2')
+            ->middleware('api')
+            ->namespace("{$this->apiNamespace}\V2")
+            ->group(base_path('routes/apiv2.php'));
+            
+        Route::prefix([
+            'middleware' => ['api', 'api_version:v1'],
+            'namespace' => "{$this->apiNamespace}\V1",
+            'prefix' => "api/v1",
+        ], function ($router) {
+            require base_path('routes/apiv1.php');
+        });
+
+        Route::prefix([
+            'middleware' => ['api', 'api_version:v2'],
+            'namespace' => "{$this->apiNamespace}\V2",
+            'prefix' => "api/v2",
+        ], function ($router) {
+            require base_path('routes/api_v2.php');
+        });
+    } */
 
     /**
      * Configure the rate limiters for the application.
