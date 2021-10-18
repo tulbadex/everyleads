@@ -17,12 +17,72 @@ class UserControllerTest extends TestCase
     use LazilyRefreshDatabase;
 
     /** @test */
-    public function itCanUpdateUserProfile()
+    public function itDoesNotAllowGuessToAccessUserList()
+    {
+        User::factory()->count(40)->create();
+
+        $response = $this->get('/api/v1/user/');
+
+        $response
+            ->assertStatus(500);
+        $this->assertGuest();
+    }
+
+    /** @test */
+    public function itDoesNotAllowUserToFetchListOfUsers()
+    {
+        $user = User::factory()->create([
+            'name' => 'adetunde',
+            'email' => 'adetunde@gmail.com',
+            'username' => 'adetunde'
+        ]);
+
+        User::factory()->count(40)->create();
+
+        Sanctum::actingAs($user, []);
+
+        $response = $this->get('/api/v1/user/');
+
+        $response
+            ->assertStatus(403)
+            ->assertForbidden();
+    }
+
+    /** @test */
+    public function itFetchesAllUsersForAdmin()
     {
         $user = User::factory()->create([
             'name' => 'ibrahim',
             'email' => 'ibrahim@gmail.com',
             'username' => 'ibrahim',
+            'is_admin' => true
+        ]);
+
+        User::factory()->count(40)->create();
+
+        Sanctum::actingAs($user, []);
+
+        $response = $this->get('/api/v1/user/');
+
+        // $response->dump();
+
+        $response->assertOk()
+            ->assertJsonStructure(['data', 'meta', 'links'])
+            ->assertJsonCount(20, 'data')
+            ->assertJsonStructure(['data' => ['*' => ['id', 'name', 'username']]]);
+            // ->assertJsonFragment(['name' => 'ibrahim'])
+
+        // $this->assertDatabaseCount('users', 41);
+
+    }
+
+    /** @test */
+    public function itCanUpdateUserProfile()
+    {
+        $user = User::factory()->create([
+            'name' => 'ibrahimade',
+            'email' => 'ibrahimade@gmail.com',
+            'username' => 'ibrahimade',
         ]);
 
         Sanctum::actingAs($user, ['user.update']);
@@ -30,7 +90,11 @@ class UserControllerTest extends TestCase
         $response = $this->putJson('/api/v1/user/'.$user->id, [
             'name' => 'adedayo',
             'username' => 'tulbadex',
+            'password' => 'password'
         ]);
+
+        // dd($response);
+        // $response->dump();
 
         $response->assertOk()
             ->assertJsonPath('data.name', 'adedayo')
@@ -69,12 +133,59 @@ class UserControllerTest extends TestCase
         $response->assertOk()
             ->assertJsonPath('data.name', 'adettayo')
             ->assertJsonPath('data.username', 'tumrise');
-            
+
         $this->assertDatabaseHas('users', [
             'id' => $response->json('data.id'),
             'name' => $response->json('data.name'),
             'username' => $response->json('data.username'),
         ]);
+    }
+
+    /** @test */
+    public function itAllowAdinToCreateANewUser()
+    {
+        $admin = User::factory()->create([
+            'name' => 'basbas',
+            'email' => 'basbas@gmail.com',
+            'username' => 'basbas',
+            'is_admin' => true,
+        ]);
+
+        Sanctum::actingAs($admin, ['user.create']);
+
+        $response = $this->postJson('/api/v1/user', [
+            'name' => 'akeem',
+            'username' => 'akeem',
+            'email' => 'aladeakeem@gmail.com',
+            'password' => 'password'
+        ]);
+
+        $response->assertCreated()
+            ->assertJsonPath('data.name', 'akeem')
+            ->assertJsonPath('data.username', 'akeem');
+
+        $this->assertDatabaseHas('users', [
+            'id' => $response->json('data.id'),
+        ]);
+    }
+
+    /** @test */
+    public function itDoesNotAllowUserToCreateANewUser()
+    {
+        $user = User::factory()->create();
+
+        Sanctum::actingAs($user, ['user.create']);
+
+        $response = $this->postJson('/api/v1/user', [
+            'name' => 'akeem1',
+            'username' => 'akeem1',
+            'email' => 'aladeakeem1@gmail.com',
+            'password' => 'password'
+        ]);
+
+        $response
+            ->assertStatus(403)
+            ->assertForbidden();
     }
 
     /** @test */

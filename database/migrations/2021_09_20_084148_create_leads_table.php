@@ -15,8 +15,8 @@ class CreateLeadsTable extends Migration
     {
         Schema::create('leads', function (Blueprint $table) {
             $table->id();
-            $table->unsignedInteger('creator')->nullable();
-            $table->unsignedInteger('assign_to')->nullable();
+            $table->unsignedBigInteger('creator')->nullable();
+            $table->unsignedBigInteger('assign_to')->nullable();
             $table->string('title', 150)->nullable();
             $table->text('description')->nullable();
             $table->text('value')->nullable();
@@ -32,8 +32,9 @@ class CreateLeadsTable extends Migration
             $table->timestamps();
 
             $table->index(['assign_to', 'creator']);
-            $table->foreign('assign_to')->references('id')->on('users')->onDelete("set null");
-            $table->foreign('creator')->references('id')->on('users')->onDelete("set null");
+            $table->foreign('assign_to')->references('id')->on('users')->nullOnDelete();
+            $table->foreign('creator')->references('id')->on('users')->nullOnDelete();
+            // cascadeOnDelete
         });
     }
 
