@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Models\Lead;
+use App\Models\{User, Lead};
 use App\Models\Validators\LeadValidator;
 use App\Http\Resources\V1\LeadResource;
+use App\Notifications\{AlertAdminWhenLeadsIsAdded, AlertAdminWhenLeadsIsUpdated};
 use Illuminate\Http\{Request, Response};
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Database\Eloquent\Builder;
@@ -55,7 +56,8 @@ class LeadController extends Controller
     public function create() : JsonResource
     {
         abort_unless(auth()->user()->tokenCan('leads.create'),
-            Response::HTTP_FORBIDDEN
+            Response::HTTP_FORBIDDEN,
+            'You have to be authenticated'
         );
 
         $attributes = (new LeadValidator())->validate(
@@ -70,6 +72,9 @@ class LeadController extends Controller
         $lead = Lead::create(
             $attributes
         );
+        $user = auth()->user();
+
+        Notification::send(User::where('is_admin', true)->get(), new AlertAdminWhenLeadsIsAdded($user, $lead));
 
         return LeadResource::make(
             $lead->load(['creator', 'assign'])
@@ -128,6 +133,9 @@ class LeadController extends Controller
         $attributes = (new LeadValidator())->validate($lead, request()->all());
 
         $lead->update($attributes);
+        $user = auth()->user();
+
+        Notification::send(User::where('is_admin', true)->get(), new AlertAdminWhenLeadsIsUpdated($user, $lead));
 
         return LeadResource::make(
             $lead->load(['creator', 'assign'])

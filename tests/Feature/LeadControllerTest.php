@@ -2,11 +2,12 @@
 
 namespace Tests\Feature;
 
-use App\Models\Lead;
-use App\Models\User;
+use App\Models\{User, Lead};
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Response;
 use Laravel\Sanctum\Sanctum;
+use App\Notifications\{AlertAdminWhenLeadsIsAdded, AlertAdminWhenLeadsIsUpdated};
+use Illuminate\Support\Facades\{ Notification, Storage};
 use Tests\TestCase;
 
 class LeadControllerTest extends TestCase
@@ -135,6 +136,8 @@ class LeadControllerTest extends TestCase
     /** @test */
     public function itCreateALead()
     {
+        Notification::fake();
+        $admin = User::factory()->create(['is_admin' => true]);
         $user = User::factory()->create();
         $user1 = User::factory()->create();
 
@@ -170,6 +173,8 @@ class LeadControllerTest extends TestCase
         $this->assertDatabaseHas('leads', [
             'id' => $response->json('data.id'),
         ]);
+        Notification::assertSentTo($admin, AlertAdminWhenLeadsIsAdded::class);
+        Notification::assertNotSentTo($user, AlertAdminWhenLeadsIsAdded::class);
     }
 
     /** @test */
@@ -197,6 +202,12 @@ class LeadControllerTest extends TestCase
     /** @test */
     public function itUpdatesALead()
     {
+        Notification::fake();
+
+        $admin = User::factory()->create([
+            'is_admin' => true,
+        ]);
+        
         $user = User::factory()->create([
            'name' => 'Halilu Tahir',
        ]);
@@ -218,11 +229,15 @@ class LeadControllerTest extends TestCase
            ->assertJsonPath('data.creator.id', $user->id)
            ->assertJsonPath('data.title', 'Updated leads title');
         $this->assertAuthenticated();
+
+        $noti = Notification::assertSentTo($admin, AlertAdminWhenLeadsIsUpdated::class);
+        Notification::assertNotSentTo($user, AlertAdminWhenLeadsIsUpdated::class);
     }
 
     /** @test */
     public function itAllowAdminToUpdatesALead()
     {
+        Notification::fake();
         $admin = User::factory()->create([
             'is_admin' => true,
         ]);
@@ -247,6 +262,9 @@ class LeadControllerTest extends TestCase
            ->assertJsonPath('data.creator.id', $user->id)
            ->assertJsonPath('data.title', 'Updated leads title');
         $this->assertAuthenticated();
+
+        Notification::assertSentTo($admin, AlertAdminWhenLeadsIsUpdated::class);
+        Notification::assertNotSentTo($user, AlertAdminWhenLeadsIsUpdated::class);
     }
 
     /** @test */

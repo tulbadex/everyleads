@@ -1,8 +1,6 @@
 <?php
 
-use App\Http\Controllers\API\V1\AuthController;
-use App\Http\Controllers\API\V1\LeadController;
-use App\Http\Controllers\API\V1\UserController;
+use App\Http\Controllers\API\V1\{AuthController, LeadController, UserController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,8 +14,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
 
 // protected route
 Route::group(['middleware' => ['auth:sanctum']], function () {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator as FacadesValidator;
 
@@ -15,7 +14,8 @@ class AuthController extends Controller
         $validator = FacadesValidator::make($request->all(),[
             'name' => 'required|string|max:50',
             'username' => 'required|string|max:50',
-            'email' => 'required|string|email:rfc,dns|max:150|unique:users,email',
+            // 'email' => 'required|string|email:rfc,dns|max:150|unique:users,email',
+            'email' => 'required|string|email|max:150|unique:users,email',
             'password' => 'required|string|min:8'
         ]);
 
@@ -24,21 +24,17 @@ class AuthController extends Controller
                 'Error' => $validator->errors()
             ], 401);
         }
-        /* $data = $request->validate([
-            'name' => 'required|string|max:50',
-            'email' => 'required|string|email|max:150|unique:users',
-            'password' => 'required|string|min:8'
-        ]); */
 
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => $request->password
         ]);
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        // $token = $user->createToken('auth_token')->plainTextToken;
         return response()->json([
-            'access_token' => $token,
+            // 'access_token' => $token,
+            'message' => 'Registeration was successful',
             'token_type' => 'Bearer'
         ], 201);
     }
@@ -46,16 +42,23 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         try {
-            $fields = $request->validate([
-                'email' => 'email|required|string',
+
+            $validator = FacadesValidator::make($request->all(),[
+                'email' => 'required|string|email',
                 'password' => 'required|string'
             ]);
 
-            $user = User::where('email', $fields['email'])->first();
-
-            if (!$user || !Hash::check($fields['password'], $user->password)) {
+            if ($validator->fails()) {
                 return response()->json([
-                    'message' => ['Credential invalid']
+                    'Error' => $validator->errors()
+                ], 401);
+            }
+
+            $user = User::where('email', $request->email)->first();
+
+            if (!$user || !Hash::check($request->password, $user->password)) {
+                return response()->json([
+                    'message' => 'Credential invalid'
                 ], 401);
             }
 
@@ -76,9 +79,9 @@ class AuthController extends Controller
     public function logout(Request $request, User $user)
     {
         // auth()->user()->currentAccessToken()->delete();
-        // auth()->user()->tokens()->delete();
+        auth()->user()->tokens()->delete();
         // $user->tokens()->delete();
-        $request->user()->currentAccessToken()->delete();
+        // $request->user()->currentAccessToken()->delete();
         return response()->json([
                 'message' => 'Logged out Successful',
             ], 201);
