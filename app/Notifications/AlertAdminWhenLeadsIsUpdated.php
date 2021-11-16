@@ -12,6 +12,9 @@ class AlertAdminWhenLeadsIsUpdated extends Notification implements ShouldQueue
 {
     use Queueable;
 
+    public $user;
+    public $lead;
+
     /**
      * Create a new notification instance.
      *
@@ -19,7 +22,8 @@ class AlertAdminWhenLeadsIsUpdated extends Notification implements ShouldQueue
      */
     public function __construct(User $user, Lead $lead)
     {
-        //
+        $this->user = $user;
+        $this->lead = $lead;
     }
 
     /**
@@ -42,8 +46,8 @@ class AlertAdminWhenLeadsIsUpdated extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line($user->name.' updated lead '.$lead->title)
-                    ->action('Notification Action', url('/login'))
+                    ->line($this->user->name.' updated lead '.$this->lead->title)
+                    ->action('Login to see', url('/login'))
                     ->line('Thank you for using our application!');
     }
 

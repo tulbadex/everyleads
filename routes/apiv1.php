@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\V1\{AuthController, LeadController, UserController};
+// use App\Http\Controllers\API\V1\LeadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,7 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/user/{user}', [UserController::class, 'show']);
 });
 
-Route::get('/leads', [LeadController::class, 'index']);
+Route::get('/leads', [LeadController::class, 'index'])->middleware('auth:sanctum');
 Route::post('/leads', [LeadController::class, 'create'])->middleware('auth:sanctum');
 Route::get('/leads/{lead}', [LeadController::class, 'show'])->middleware('auth:sanctum');
 
