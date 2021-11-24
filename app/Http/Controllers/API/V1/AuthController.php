@@ -9,6 +9,56 @@ use Illuminate\Support\Facades\Validator as FacadesValidator;
 
 class AuthController extends Controller
 {
+    /**
+     * @OA\Post(
+     *   path="/api/v1/register",
+     *   tags={"Register"},
+     *   summary="User Register",
+     *   operationId="register",
+     *
+     *  @OA\RequestBody(
+     *      required=true,
+     *      description="Create a user",
+     *      @OA\JsonContent(),
+     *      @OA\MediaType(
+     *          mediaType="application/json",
+     *          @OA\Schema(
+     *              type="object",
+     *              required={"name", "username", "email", "password"},
+     *              @OA\Property(property="name", type="string", format="text", example="tobais"),
+     *              @OA\Property(property="username", type="string", format="text", example="tobais"),
+     *              @OA\Property(property="email", type="string", format="email", example="example@email.com"),
+     *              @OA\Property(property="password", type="string", format="password", example="password123"),
+     *          ),
+     *     ),
+     *   ),
+     *
+     *
+     *   @OA\Response(
+     *      response=201,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      ),
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *  )
+     **/
     public function register(Request $request)
     {
         $validator = FacadesValidator::make($request->all(),[
@@ -38,6 +88,57 @@ class AuthController extends Controller
             'token_type' => 'Bearer'
         ], 201);
     }
+
+
+    /**
+     * @OA\Post(
+     ** path="/api/v1/login",
+     *   tags={"Login"},
+     *   summary="Login",
+     *   operationId="login",
+     *
+     *  @OA\RequestBody(
+     *      required=true,
+     *      description="pass user Credential",
+     *      @OA\JsonContent(),
+     *      @OA\MediaType(
+     *          mediaType="multipart/form-data",
+     *          @OA\Schema(
+     *              type="object",
+     *              required={"email", "password"},
+     *              @OA\Property(property="email", type="string", format="email", example="example@email.com"),
+     *              @OA\Property(property="password", type="string", format="password", example="password123"),
+     *          ),
+     *     ),
+     *  ),
+     *
+     *  @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *     @OA\JsonContent(
+     *        @OA\Property(property="access_token", type="object"),
+     *        @OA\Property(property="token_type", type="object"),
+     *     ),
+     *  ),
+     *
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *   @OA\Response(
+     *     response=403,
+     *     description="Forbidden"
+     *   )
+     * )
+     **/
 
     public function login(Request $request)
     {
@@ -76,6 +177,37 @@ class AuthController extends Controller
         }
     }
 
+    /**
+     * @OA\Post(
+     ** path="/api/v1/logout",
+     *   tags={"Logout"},
+     *   summary="Logout",
+     *   operationId="logout",
+     *   security={ {"bearerAuth": {} }},
+     *
+     *  @OA\Response(
+     *     response=200,
+     *     description="Success",
+     *  ),
+     *
+     *   @OA\Response(
+     *      response=401,
+     *       description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *   @OA\Response(
+     *     response=403,
+     *     description="Forbidden"
+     *   )
+     * )
+     **/
     public function logout(Request $request, User $user)
     {
         // auth()->user()->currentAccessToken()->delete();

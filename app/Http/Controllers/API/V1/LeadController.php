@@ -16,6 +16,32 @@ use Illuminate\Support\Facades\{DB, Notification, Storage};
 class LeadController extends Controller
 {
     /**
+     * @OA\Get(
+     *      path="/api/v1/leads",
+     *      operationId="index",
+     *      tags={"Leads"},
+     *      summary="Get list of all leads",
+     *      security={{"bearerAuth":{}}},
+     *      description="Returns list of leads",
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *          @OA\MediaType(
+     *              mediaType="application/json",
+     *          )
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *     )
+     */
+
+    /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
@@ -47,6 +73,66 @@ class LeadController extends Controller
             $leads
         );
     }
+
+    /**
+     * @OA\Post(
+     ** path="/api/v1/leads",
+     *   tags={"Leads"},
+     *   summary="Create a Leads",
+     *   operationId="create",
+     *   security={{"bearerAuth":{}}},
+     * 
+     *  @OA\RequestBody(
+     *      required=true,
+     *      description="pass user Credential",
+     *      @OA\JsonContent(),
+     *      @OA\MediaType(
+     *          mediaType="application/json",
+     *          @OA\Schema(
+     *              type="object",
+     *              required={"title", "description", "value", "source", "contact_person", "contact_email", "contact_phone", 
+     *                      "contact_organization", "start_date", "end_date", "status"
+     *              },
+     *              @OA\Property(property="title", type="string", example="enter title"),
+     *              @OA\Property(property="description", type="string", example="enter description"),
+     *              @OA\Property(property="value", type="integer", example="9000000"),
+     *              @OA\Property(property="source", type="string", example="Linkedin"),
+     *              @OA\Property(property="contact_person", type="string", example="Afeez"),
+     *              @OA\Property(property="contact_email", type="string", example="afeez@yahoo.com"),
+     *              @OA\Property(property="contact_phone", type="string", example="+2349061234555"),
+     *              @OA\Property(property="contact_organization", type="string", example="Aliami & Co Ltd"),
+     *              @OA\Property(property="start_date", type="date", example="2021-11-21"),
+     *              @OA\Property(property="end_date", type="date", example="2021-12-21"),
+     *              @OA\Property(property="status", type="string", example="In Progress"),
+     *          ),
+     *     ),
+     *  ),
+     *
+     *   @OA\Response(
+     *      response=200,
+     *       description="Success",
+     *      @OA\MediaType(
+     *           mediaType="application/json",
+     *      )
+     *   ),
+     *   @OA\Response(
+     *      response=401,
+     *      description="Unauthenticated"
+     *   ),
+     *   @OA\Response(
+     *      response=400,
+     *      description="Bad Request"
+     *   ),
+     *   @OA\Response(
+     *      response=404,
+     *      description="not found"
+     *   ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     *  )
+     **/
 
     /**
      * Show the form for creating a new resource.
@@ -82,15 +168,36 @@ class LeadController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *      path="/api/v1/leads/{id}",
+     *      operationId="show",
+     *      tags={"Leads"},
+     *      summary="Get leads information",
+     *      description="Returns leads data",
+     *      security={{"bearerAuth":{}}},
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Leads id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      )
+     * )
      */
-    public function store(Request $request)
-    {
-        //
-    }
 
     /**
      * Display the specified resource.
@@ -105,16 +212,40 @@ class LeadController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Lead  $lead
-     * @return \Illuminate\Http\Response
+     * @OA\Put(
+     *      path="/api/v1/leads/{id}",
+     *      operationId="update",
+     *      tags={"Lead"},
+     *      summary="Update existing leads",
+     *      description="Returns updated leads data",
+     *      security={{"bearerAuth":{}}},
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Lead id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=400,
+     *          description="Bad Request"
+     *      ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
      */
-    public function edit(Lead $lead)
-    {
-        //
-    }
-
     /**
      * Update the specified resource in storage.
      *
@@ -143,6 +274,43 @@ class LeadController extends Controller
     }
 
     /**
+     * @OA\Delete(
+     *      path="/api/v1/leads/{id}",
+     *      operationId="delete",
+     *      tags={"Lead"},
+     *      summary="Delete existing leads",
+     *      description="Deletes a record and returns no content",
+     *      security={{"bearerAuth":{}}},
+     *      @OA\Parameter(
+     *          name="id",
+     *          description="Lead id",
+     *          required=true,
+     *          in="path",
+     *          @OA\Schema(
+     *              type="integer"
+     *          )
+     *      ),
+     *      @OA\Response(
+     *          response=204,
+     *          description="Successful operation",
+     *          @OA\JsonContent()
+     *       ),
+     *      @OA\Response(
+     *          response=401,
+     *          description="Unauthenticated",
+     *      ),
+     *      @OA\Response(
+     *          response=403,
+     *          description="Forbidden"
+     *      ),
+     *      @OA\Response(
+     *          response=404,
+     *          description="Resource Not Found"
+     *      )
+     * )
+     */
+
+    /**
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Lead  $lead
@@ -158,4 +326,7 @@ class LeadController extends Controller
 
         $lead->delete();
     }
+
+
 }
+
